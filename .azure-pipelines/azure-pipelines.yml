@@ -15,11 +15,10 @@ stages:
               filePath: 'bootstrap.ps1'
               arguments: '-Bootstrap -Verbose'
               pwsh: true
-              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              # workingDirectory: '$(System.DefaultWorkingDirectory)'
 
           - powershell: |
               # Import the New-MailChimpNewsletter script
               dir
-              Import-Module (Join-Path 'utilities' 'scripts' 'New-MailChimpNewsletter.ps1')
+              . (Join-Path '$(System.DefaultWorkingDirectory)' 'utilities' 'scripts' 'New-MailChimpNewsletter.ps1')
             displayName: 'Send newsletter'
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
