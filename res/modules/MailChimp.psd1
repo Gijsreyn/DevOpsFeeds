@@ -23,6 +23,9 @@
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/gijsreijn/devopsfeeds/'
 
+            # A URL to an icon representing this module.
+            IconUri = 'https://raw.githubusercontent.com/Gijsreyn/devopsfeeds/main/.images/mailchimp-icon-50px.png'
+
         }
     }
 }
