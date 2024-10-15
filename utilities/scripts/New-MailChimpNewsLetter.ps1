@@ -26,13 +26,13 @@ function New-MailChimpNewsLetter {
     param 
     (
         [Parameter(Mandatory = $false)]
-        [string] $FeedList,
+        [string] $FeedList = (Join-Path $PSScriptRoot '..' '..' 'res' 'data' 'feeds.psd1'),
 
         [Parameter(Mandatory = $true)]
         [string] $AccessToken,
 
-        [Parameter(Mandatory = $true)]
-        [string] $NewsLetterFile
+        [Parameter(Mandatory = $false)]
+        [string] $NewsLetterFile = (Join-Path $PSScriptRoot '..' '..' 'res' 'templates' 'html' 'basic.pr.template.html')
     )
 
     if (-not (Test-Path $NewsLetterFile -ErrorAction SilentlyContinue)) {

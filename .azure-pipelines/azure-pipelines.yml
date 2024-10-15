@@ -21,4 +21,6 @@ stages:
               # Import the New-MailChimpNewsletter script
               $moduleFile = Get-ChildItem -Filter 'New-MailChimpNewsletter.ps1' -Recurse
               . $moduleFile.FullName
+
+              $news = New-MailChimpNewsletter -AccessToken '$(accessToken)' -Verbose
             displayName: 'Send newsletter'
