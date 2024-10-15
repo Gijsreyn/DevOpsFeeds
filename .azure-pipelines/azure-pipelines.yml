@@ -19,5 +19,5 @@ stages:
 
           - powershell: |
               # Import the New-MailChimpNewsletter script
-              . (Join-Path $PSScriptRoot 'utilities' 'scripts' 'New-MailChimpNewsletter.ps1')
+              Import-Module (Join-Path $PSScriptRoot 'utilities' 'scripts' 'New-MailChimpNewsletter.ps1')
             displayName: 'Send newsletter'
