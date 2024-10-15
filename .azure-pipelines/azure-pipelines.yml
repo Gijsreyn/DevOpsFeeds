@@ -1,0 +1,22 @@
+name: '$(Build.DefinitionName)-$(Build.DefinitionVersion)-$(Date:yyyyMMdd)-$(Rev:r)'
+
+trigger: none
+
+stages:
+  - stage: PublishNewsletter
+    jobs:
+      - job: Publish
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: PowerShell@2
+            displayName: 'Install required module(s)'
+            inputs:
+              filePath: 'test.ps1'
+              arguments: '-Bootstrap'
+              pwsh: true
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              
+          - powershell: |
+              # Import the New-MailChimpNewsletter script
+              . (Join-Path $PSScriptRoot 'utilities 'scripts' 'New-MailChimpNewsletter.ps1')
