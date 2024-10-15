@@ -22,5 +22,5 @@ stages:
               $moduleFile = Get-ChildItem -Filter 'New-MailChimpNewsletter.ps1' -Recurse
               . $moduleFile.FullName
 
-              $news = New-MailChimpNewsletter -AccessToken '$(accessToken)' -Verbose
+              $news = New-MailChimpNewsletter -AccessToken '$(GitHubApiToken)' -Verbose
             displayName: 'Send newsletter'
