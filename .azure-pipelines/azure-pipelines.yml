@@ -19,5 +19,7 @@ stages:
 
           - powershell: |
               # Import the New-MailChimpNewsletter script
+              dir
               Import-Module (Join-Path $PSScriptRoot 'utilities' 'scripts' 'New-MailChimpNewsletter.ps1')
             displayName: 'Send newsletter'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
