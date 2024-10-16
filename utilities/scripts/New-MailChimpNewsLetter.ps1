@@ -26,7 +26,7 @@ function New-MailChimpNewsLetter {
     param 
     (
         [Parameter(Mandatory = $false)]
-        [string] $FeedList = (Join-Path "$PSScriptRoot/../../" 'res' 'data' 'feeds.psd1'),
+        [string] $FeedList = (Join-Path "$PSScriptRoot/../../" 'res' 'data' 'pr.feeds.psd1'),
 
         [Parameter(Mandatory = $true)]
         [string] $AccessToken,
