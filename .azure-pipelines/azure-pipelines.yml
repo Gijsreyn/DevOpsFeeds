@@ -22,7 +22,7 @@ stages:
               . $moduleFile.FullName
 
               # connect to REST API
-              Connect-MailChimp -AccessToken '$(MailChimpApiToken)'
+              Connect-MailChimpApi -AccessToken '$(MailChimpApiToken)'
 
                # start creating the newsletter data 
               $newsLetter = New-MailChimpNewsletter -AccessToken '$(GitHubApiToken)' -Verbose
