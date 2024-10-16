@@ -15,12 +15,31 @@ stages:
               filePath: 'bootstrap.ps1'
               arguments: '-Bootstrap -Verbose'
               pwsh: true
-              # workingDirectory: '$(System.DefaultWorkingDirectory)'
 
           - powershell: |
-              # Import the New-MailChimpNewsletter script
+              # dot-source helper
               $moduleFile = Get-ChildItem -Filter 'New-MailChimpNewsletter.ps1' -Recurse
               . $moduleFile.FullName
 
-              $news = New-MailChimpNewsletter -AccessToken '$(GitHubApiToken)' -Verbose
-            displayName: 'Send newsletter'
+              # connect to REST API
+              Connect-MailChimp -AccessToken '$(MailChimpApiToken)'
+
+               # start creating the newsletter data 
+              $newsLetter = New-MailChimpNewsletter -AccessToken '$(GitHubApiToken)' -Verbose
+
+              # time to build the campaign
+              $start = (Get-Date).AddDays(-7).ToString("dddd MMMM dd yyyy")
+              $end = (Get-Date).ToString("dddd MMMM dd yyyy")
+
+              $parameters = @{
+                  subjectLine = ("DevOpsFeeds PR Newsletter Weekly Update: {0} to {1}" -f $start, $end)
+                  title       = ('DevOpsFeeds PR Newsletter {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
+                  replyTo     = '$(replyTo)'
+                  listId      = '$(listId)'
+                  FromName    = 'DevOpsFeeds'
+              }
+              $campaign = New-MailChimpCampaign @parameters -Verbose
+
+              # update the content 
+              $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
+            displayName: 'Send DevOpsFeeds PR newsletter'

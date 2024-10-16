@@ -97,8 +97,32 @@ Function Get-MailChimpApiData
         }
         'Get-MailChimpCampaignContent'    = @{
             '3.0' = @{
-                Description = 'Connect to the MailChimp API'
+                Description = 'Get content of a MailChimp campaign'
                 URI         = 'campaigns/{id}/content'
+                Method      = 'Get'
+                Body        = ''
+                Query       = ''
+                Result      = ''
+                Filter      = ''
+                Success     = '200'
+            }
+        }
+        'Get-MailChimpList'    = @{
+            '3.0' = @{
+                Description = 'Get a list of MailChimp audience'
+                URI         = 'lists/{id}'
+                Method      = 'Get'
+                Body        = ''
+                Query       = ''
+                Result      = ''
+                Filter      = ''
+                Success     = '200'
+            }
+        }
+        'Get-MailChimpCampaign'    = @{
+            '3.0' = @{
+                Description = 'Get a list of MailChimp campaigns'
+                URI         = 'campaigns/{id}'
                 Method      = 'Get'
                 Body        = ''
                 Query       = ''
@@ -735,43 +759,43 @@ function New-MailChimpCampaign
         # We create the full body first as it is quite sensitive
         Write-Verbose -Message "Building body"
         $body = [ordered]@{
-            type = $type
+            type = $Type
             recipients = [ordered]@{
-                list_id = $list_id
+                list_id = $ListId
             }
             settings = [ordered]@{
-                subject_line = $subject_line
-                preview_text = $preview_text
-                title = $title
-                from_name = $from_name
-                reply_to = $reply_to
-                use_conversation = $use_conversation
-                to_name = $to_name
-                folder_id = $folder_id
-                authenticate = $authenticate
-                auto_footer = $auto_footer
-                inline_css = $inline_css
-                auto_tweet = $auto_tweet
-                fb_comments = $fb_comments
-                template_id = $template_id
+                subject_line = $SubjectLine
+                preview_text = $PreviewText
+                title = $Title
+                from_name = $FromName
+                reply_to = $ReplyTo
+                use_conversation = $UseConversation
+                to_name = $ToName
+                folder_id = $FolderId
+                authenticate = $Authenticate
+                auto_footer = $AutoFooter
+                inline_css = $InlineCss
+                auto_tweet = $AutoTweet
+                fb_comments = $FbComments
+                template_id = $TemplateId
             }
             tracking = [ordered]@{
-                opens = $opens
-                html_clicks = $html_clicks
-                text_clicks = $text_clicks
-                goal_tracking = $goal_tracking
-                ecomm360 = $ecomm360
-                google_analytics = $google_analytics
-                clicktale = $clicktale
+                opens = $Opens
+                html_clicks = $HtmlClicks
+                text_clicks = $TextClicks
+                goal_tracking = $GoalTracking
+                ecomm360 = $Ecomm360
+                google_analytics = $GoogleAnalytics
+                clicktale = $Clicktale
                 salesforce = [ordered]@{
-                    campaign = $salesforce_campaign
-                    notes = $salesforce_notes
+                    campaign = $SalesforceCampaign
+                    notes = $SalesforceNotes
                 }
                 capsule = [ordered]@{
-                    notes = $capsule_notes
+                    notes = $CapsuleNotes
                 }
             }
-            content_type = $content_type
+            content_type = $ContentType
         }
 
         $body = ConvertTo-Json $body -Depth 10
@@ -939,6 +963,106 @@ function Get-MailChimpCampaignContent
     param (
         [Parameter(Mandatory = $true)]
         [Alias('CampaignId')]
+        [string] $Id,
+
+        [Parameter(Mandatory = $false)]
+        [string] $Server = $global:MailChimpConnection.server
+    )
+
+    Begin
+    {
+        Test-MailChimpApi
+
+        # API data references the name of the function
+        # For convenience, that name is saved here to $function
+        $function = $MyInvocation.MyCommand.Name
+
+        # Retrieve all of the URI, method, body, query, result, filter, and success details for the API endpoint
+        Write-Verbose -Message "Gather API Data for $function"
+        $resources = Get-MailChimpApiData -endpoint $function
+        Write-Verbose -Message "Load API data for $($resources.Function)"
+        Write-Verbose -Message "Description: $($resources.Description)"
+    }
+    Process
+    {
+        $uri = New-URIString -server $Server -endpoint ($resources.URI) -id $id
+        $uri = Test-QueryParam -querykeys ($resources.Query.Keys) -parameters ((Get-Command $function).Parameters.Values) -uri $uri
+
+        $result = Submit-Request -uri $uri -header $Header -method $($resources.Method)
+        return $result
+    } 
+}
+
+function Get-MailChimpList
+{
+    <#
+    .SYNOPSIS
+        Retrieves the details of a specified MailChimp list.
+
+    .DESCRIPTION
+        The Get-MailChimpList function fetches the details of a MailChimp list using the list ID. 
+        It retrieves various information about the list, including its members and settings.
+
+    .PARAMETER Id
+        The unique identifier for the MailChimp list. This parameter is optional.
+
+    .PARAMETER Server
+        The MailChimp server to connect to. Defaults to the global MailChimp connection server.
+
+    .EXAMPLE
+        Get-MailChimpList -Id "12345"
+
+        This example retrieves the details of the MailChimp list with the ID "12345".
+
+    .EXAMPLE
+        Get-MailChimpList
+
+        This example retrieves the details of all MailChimp lists.
+    .NOTES
+        This function requires the MailChimp API to be accessible and the necessary permissions to retrieve list details.
+    #>
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false)]
+        [Alias('AudienceId')]
+        [ValidateNotNullOrEmpty()]
+        [string] $Id,
+
+        [Parameter(Mandatory = $false)]
+        [string] $Server = $global:MailChimpConnection.server
+    )
+
+    Begin
+    {
+        Test-MailChimpApi
+
+        # API data references the name of the function
+        # For convenience, that name is saved here to $function
+        $function = $MyInvocation.MyCommand.Name
+
+        # Retrieve all of the URI, method, body, query, result, filter, and success details for the API endpoint
+        Write-Verbose -Message "Gather API Data for $function"
+        $resources = Get-MailChimpApiData -endpoint $function
+        Write-Verbose -Message "Load API data for $($resources.Function)"
+        Write-Verbose -Message "Description: $($resources.Description)"
+    }
+    Process
+    {
+        $uri = New-URIString -server $Server -endpoint ($resources.URI) -id $id
+        $uri = Test-QueryParam -querykeys ($resources.Query.Keys) -parameters ((Get-Command $function).Parameters.Values) -uri $uri
+
+        $result = Submit-Request -uri $uri -header $Header -method $($resources.Method)
+        return $result
+    } 
+}
+
+function Get-MailChimpCampaign
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false)]
+        [Alias('CampaignId')]
+        [ValidateNotNullOrEmpty()]
         [string] $Id,
 
         [Parameter(Mandatory = $false)]

@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Mandatory = $false)]
-    [string[]] $ModuleName = @('PowerShellForGitHub'),#, 'MailChimp'),
+    [string[]] $ModuleName = @('PowerShellForGitHub','MailChimp'),
     [Parameter()]
     [switch] $Bootstrap
 )
