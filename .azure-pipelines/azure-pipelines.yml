@@ -17,6 +17,9 @@ stages:
               pwsh: true
 
           - powershell: |
+              # telemetry
+              Set-GitHubConfiguration -DisableTelemetry
+
               # dot-source helper
               $moduleFile = Get-ChildItem -Filter 'New-MailChimpNewsletter.ps1' -Recurse
               . $moduleFile.FullName
@@ -42,4 +45,7 @@ stages:
 
               # update the content 
               $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
+
+              # the campaign is ready to be sent
+              Send-MailChimpCampaign -Id $campaign.id -Verbose
             displayName: 'Send DevOpsFeeds PR newsletter'
