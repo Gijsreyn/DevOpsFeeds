@@ -1,11 +1,18 @@
 name: '$(Build.DefinitionName)-$(Build.DefinitionVersion)-$(Date:yyyyMMdd)-$(Rev:r)'
 
-trigger: none
+schedules:
+- cron: "0 4 * * 0" # At 06:00 on every Sunday (UTC+2)
+  displayName: EverySundayAtSix
+  branches:
+    include:
+    - main
+  always: true
 
 stages:
-  - stage: PublishNewsletter
+  - stage: Publish
     jobs:
       - job: Publish
+        displayName: 'Publish PR newsletter'
         pool:
           vmImage: 'ubuntu-latest'
         steps:
