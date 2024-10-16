@@ -40,6 +40,8 @@ stages:
                   replyTo     = '$(replyTo)'
                   listId      = '$(listId)'
                   FromName    = 'DevOpsFeeds'
+                  Opens       = $true
+                  HtmlClicks  = $true
               }
               $campaign = New-MailChimpCampaign @parameters -Verbose
 

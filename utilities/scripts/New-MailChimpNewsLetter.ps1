@@ -148,8 +148,7 @@ function Get-NewsletterHeader {
     update:
     $startDateString to
     $endDateString</span
-></strong
->
+></strong>
 </p>
 <p
 style="
@@ -232,14 +231,12 @@ function Get-NewsletterContent {
     text-align: center;
     "
 >
-    <strong
-    ><span
+    <strong><span
         style="
         font-size: 18px;
         "
         ><em>$($group.Group.Category | Select-Object -First 1) Updates</em></span
-    ></strong
-    >
+    ></strong>
 </p>
 </div>
 <br />
