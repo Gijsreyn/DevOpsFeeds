@@ -1,12 +1,10 @@
 # ![FeedLogo] DevOpsFeeds
 
-The DevOpsFeed repository is inspired by the Azure Weekly newsletter. The newsletter on Azure content is developed by Luke Murray, a Microsoft MVP. If you've subscribed to Azure Weekly newsletter, you will not be surprised on the design choice in this repository:
+The DevOpsFeed repository is inspired by the Azure Weekly newsletter. The newsletter on Azure content is developed by Luke Murray, a Microsoft MVP. If you've subscribed to Azure Weekly newsletter, you will not be surprised on the design choice in this repository for the newsletters:
 
 ![Newsletter]
 
-Making newsletters that are recognizable and engaging, helps to build a strong brand identity, and keeps your audience interested and informed. In this repository, you will find all kinds of information collected from open-source GitHub projects based on category.
-
-Each category is divided into separate sections to easily skim for useful content.
+Making newsletters that are recognizable and engaging, helps to build an identity around IT newsletters, and keeps audiences interested and informed. In this repository, information is collected through open-source GitHub projects based on category. Each category is divided into sub-sections to easily skim for content relevant to you.
 
 The following newsletters are configured and run every Sunday at 06:00:
 
