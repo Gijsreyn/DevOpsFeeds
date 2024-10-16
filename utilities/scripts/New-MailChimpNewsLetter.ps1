@@ -283,7 +283,7 @@ function New-HtmlTable {
         <tr style="background-color: $backgroundColor;">
             <td>$($item.Owner)</td>
             <td><a href="$($item.Repositoryurl)" target="_blank">$($item.Repository)</a></td>
-            <td><a href="$($item.html_url)" target="_blank">$($item.Title)</a></td>
+            <td><a href="$($item.Htmlurl)" target="_blank">$($item.Title)</a></td>
             <td>$(( Get-Culture ).TextInfo.ToTitleCase( $item.state.ToLower()) )</td>
             <td><a href="https://github.com/$($item.'Created by')" target="_blank">$($item.'Created by')</a></td>
         </tr>

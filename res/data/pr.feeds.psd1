@@ -31,11 +31,5 @@
                 User = @('dependabot[bot]')
             }
         }
-        @{
-            Owner = 'MicrosoftDocs'
-            Repository = 'azure-docs'
-            Category = 'Documentation'
-            State = 'Open' # filter to not get all available PRs
-        }
     )
 }
