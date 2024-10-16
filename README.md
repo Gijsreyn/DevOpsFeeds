@@ -1,10 +1,14 @@
 # ![FeedLogo] DevOpsFeeds
 
+The DevOpsFeed repository is inspired by the Azure Weekly newsletter. The newsletter on Azure content is developed by Luke Murray, a Microsoft MVP. If you've subscribed to Azure Weekly newsletter, you will not be surprised on the design choice in this repository:
+
 ![Newsletter]
 
-The DevOpsFeeds repository is developed to send newsletter(s). Information is collected from open-source GitHub projects based on category. This information is transformed to HTML using PowerShell. When the information is transformed, the MailChimp API is invoked to start the campaign.
+Making newsletters that are recognizable and engaging, helps to build a strong brand identity, and keeps your audience interested and informed. In this repository, you will find all kinds of information collected from open-source GitHub projects based on category.
 
-The following newsletters are configured and sent:
+Each category is divided into separate sections to easily skim for useful content.
+
+The following newsletters are configured and run every Sunday at 06:00:
 
 - Pull Request Newsletter
 
@@ -58,6 +62,11 @@ If you have any other suggestions, bug reports, or feature requests, please open
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
+<p align="center">
+  <img src=".images/image-newsletter.png" alt="Newsletter">
+</p>
+
+
 <!-- References -->
-[FeedLogo]: .images/feed-48.png
+[FeedLogo]: .images/newsletter-40.png
 [Newsletter]: .images/image-newsletter.png
