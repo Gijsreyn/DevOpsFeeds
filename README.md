@@ -64,9 +64,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Support me
 
-If you find this project useful and newsletter useful, consider buying me a coffee to support its development!
-would like to support its development, consider [buying me a coffee](https://buymeacoffee.com/gijsreijnt)! :coffee:
-
+If you find this project useful and newsletter useful, consider [buying me a coffee](https://buymeacoffee.com/gijsreijnt)! :coffee:
 
 <!-- References -->
 [FeedLogo]: .images/newsletter-40.png
