@@ -2,7 +2,9 @@
 
 The DevOpsFeed repository is inspired by the Azure Weekly newsletter. The newsletter on Azure content is developed by Luke Murray, a Microsoft MVP. If you've subscribed to Azure Weekly newsletter, you will not be surprised on the design choice in this repository for the newsletters:
 
-![Newsletter]
+<p align="center">
+  <img src=".images/image-newsletter.png" alt="Newsletter">
+</p>
 
 Making newsletters that are recognizable and engaging, helps to build an identity around IT newsletters, and keeps audiences interested and informed. In this repository, information is collected through open-source GitHub projects based on category. Each category is divided into sub-sections to easily skim for content relevant to you.
 
@@ -60,11 +62,15 @@ If you have any other suggestions, bug reports, or feature requests, please open
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-<p align="center">
-  <img src=".images/image-newsletter.png" alt="Newsletter">
-</p>
+## Support me
+
+If you find this project useful and newsletter useful, consider buying me a coffee to support its development!
+would like to support its development, consider buying me a coffee!
+
+![BuyMeAcoffee](https://www.buymeacoffee.com/gijsreijn)
 
 
 <!-- References -->
 [FeedLogo]: .images/newsletter-40.png
 [Newsletter]: .images/image-newsletter.png
+[BuyMeACoffee]: .images/buy-me-a-coffee.png
