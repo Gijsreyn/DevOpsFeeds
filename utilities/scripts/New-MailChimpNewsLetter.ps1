@@ -95,9 +95,39 @@ function Get-GitHubPullRequestData {
             }
 
             $previousWeek = (Get-Date).AddDays(-7)
+            $currentDay = (Get-Date).ToString('yyyy-MM-dd')
             Write-Verbose "Retrieving pull requests for $($feed.Owner)/$($feed.Repository)"
-            # TODO: check if other REST API can sort by date already
-            $prs = Get-GitHubPullRequest @params -AccessToken $AccessToken | Where-Object { $_.created_at -gt $previousWeek }
+            # using GraphQL to reduce amount of data fetched
+            $grahpQlQuery = @"
+{
+  search(first: 100, query: "repo:PowerShell/DSC is:pr is:open updated:$($previousWeek.ToString('yyyy-MM-dd'))..$currentDay", type: ISSUE) {
+    nodes {
+      ... on PullRequest {
+        title
+        url
+        state
+        author {
+          login
+        }
+        repository {
+            nameWithOwner
+            name
+            url
+          }
+        createdAt
+      }
+    }
+  }
+}
+"@
+            $authenticationToken = [System.Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$accessToken"))
+            $headers = @{
+                "Authorization" = [String]::Format("Basic {0}", $authenticationToken)
+                "Content-Type"  = "application/json"
+            }
+
+            $body = @{query=$grahpQlQuery} | ConvertTo-Json
+            $res = Invoke-RestMethod "https://api.github.com/graphql" -Headers $headers -Body $body -Method Post
 
             # TODO: make better filter
             if ($feed.ContainsKey('Filter')) {
@@ -108,19 +138,18 @@ function Get-GitHubPullRequestData {
                 }
             }
 
-            $prs |  ForEach-Object {
-                $Repository = $_.RepositoryUrl.Split("/")[-1]
-                $OwnerName = $_.RepositoryUrl.Split("/")[-2]
+            $res.data.search.nodes | ForEach-Object {
+                $OwnerName = $_.repository.nameWithOwner.Split("/")[0]
                 $inputObject.Add([PSCustomObject]@{
-                        Owner        = $OwnerName
-                        Repository   = $Repository
-                        Title        = $_.title
-                        State        = $_.state
-                        'Created by' = $_.user.login
-                        'HtmlUrl'    = $_.html_url
-                        RepositoryUrl = $_.RepositoryUrl
-                        Category     = $feed.Category
-                    })
+                    Owner        = $OwnerName
+                    Repository   = $_.repository.name
+                    Title        = $_.title
+                    State        = (Get-Culture).TextInfo.ToTitleCase($_.state.ToLower())
+                    'Created by' = $_.author.login
+                    'HtmlUrl'    = $_.url
+                    RepositoryUrl = $_.repository.url
+                    Category     = $feed.Category
+                })
             }
         }
     }
