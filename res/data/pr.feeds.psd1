@@ -38,5 +38,25 @@
                 User = @('dependabot[bot]')
             }
         }
+        @{
+            Owner = 'ansible'
+            Repository = 'ansible'
+            Category = 'Configuration Management'
+        }
+        @{
+            Owner = 'opentofu'
+            Repository = 'opentofu'
+            Category = 'Infrastructure as Code'
+        }
+        @{
+            Owner = 'grafana'
+            Repository = 'loki'
+            Category = 'Log aggregation and management'
+        }
+        @{
+            Owner = 'prometheus'
+            Repository = 'prometheus'
+            Category = 'Monitoring and alerting'
+        }
     )
 }
