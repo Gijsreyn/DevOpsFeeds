@@ -27,7 +27,7 @@
             Repository = 'radius'
             Category = 'Platform Engineering'
             Filter = @{
-                User = @('dependabot[bot]')
+                User = @('dependabot')
             }
         }
         @{
@@ -35,7 +35,7 @@
             Repository = 'bicep'
             Category = 'Infrastructure as Code'
             Filter = @{
-                User = @('dependabot[bot]')
+                User = @('dependabot')
             }
         }
         @{

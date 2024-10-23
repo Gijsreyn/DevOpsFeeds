@@ -90,7 +90,7 @@ function Get-GitHubPullRequestData {
             $feedName = $feed.Owner + "/" + $feed.Repository
             $grahpQlQuery = @"
 {
-  search(first: 100, query: "repo:$feedName is:pr is:open updated:$($previousWeek.ToString('yyyy-MM-dd'))..$currentDay", type: ISSUE) {
+  search(first: 100, query: "repo:$feedName is:pr updated:$($previousWeek.ToString('yyyy-MM-dd'))..$currentDay", type: ISSUE) {
     nodes {
       ... on PullRequest {
         title
@@ -119,16 +119,18 @@ function Get-GitHubPullRequestData {
             $body = @{query=$grahpQlQuery} | ConvertTo-Json
             $res = Invoke-RestMethod "https://api.github.com/graphql" -Headers $headers -Body $body -Method Post
 
+            $nodes = $res.data.search.nodes
+
             # TODO: make better filter
             if ($feed.ContainsKey('Filter')) {
                 if ($null -ne $feed.Filter.User)
                 {
                     Write-Verbose -Message "Applying filter: $($feed.Filter.User) to PRs"
-                    $prs = $prs | Where-Object { $_.user.Login -notin $feed.Filter.User }
+                    $nodes = $nodes | Where-Object { $_.author.login -notin $feed.Filter.User }
                 }
             }
 
-            $res.data.search.nodes | ForEach-Object {
+            $nodes | ForEach-Object {
                 $OwnerName = $_.repository.nameWithOwner.Split("/")[0]
                 $inputObject.Add([PSCustomObject]@{
                     Owner        = $OwnerName
