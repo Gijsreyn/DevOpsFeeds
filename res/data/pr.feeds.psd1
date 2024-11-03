@@ -13,11 +13,6 @@
         }
         @{
             Owner = 'PowerShell'
-            Repository = 'platyPS'
-            Category = 'Automation'
-        }
-        @{
-            Owner = 'PowerShell'
             Repository = 'PSResourceGet'
             Category = 'Automation'
         }
