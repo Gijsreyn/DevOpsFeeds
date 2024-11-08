@@ -53,5 +53,15 @@
             Repository = 'prometheus'
             Category = 'Monitoring and alerting'
         }
+        @{
+            Owner = 'microsoft'
+            Repository = 'winget-cli'
+            Category = 'Package Management'
+        }
+        @{
+            Owner = 'microsoft'
+            Repository = 'winget-dsc'
+            Category = 'Package Management'
+        }
     )
 }
