@@ -57,5 +57,10 @@
             Repository = 'winget-dsc'
             Category = 'Package Management'
         }
+        @{
+            Owner = 'Databricks'
+            Repository = 'cli'
+            Category = 'Data Engineering'
+        }
     )
 }
