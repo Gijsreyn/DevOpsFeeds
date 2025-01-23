@@ -1,0 +1,98 @@
+name: '$(Build.DefinitionName)-$(Build.DefinitionVersion)-$(Date:yyyyMMdd)-$(Rev:r)'
+
+trigger: none
+
+schedules:
+- cron: "0 4 * * 0" # At 06:00 on every Sunday (UTC+2)
+  displayName: EverySundayAtSix
+  branches:
+    include:
+    - main
+  always: true
+
+parameters:
+  - name: newsLetterFile
+    type: string
+    default: 'interactive-redesigned.html'
+
+resources:
+  repositories:
+  - repository: templates
+    type: git
+    name: templates
+
+stages:
+  - stage: Publish
+    jobs:
+      - job: Publish
+        displayName: 'Publish PR newsletter'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+          - checkout: templates
+
+          - task: PowerShell@2
+            displayName: 'Install software'
+            inputs:
+              filePath: '$(Build.SourcesDirectory)/DevOpsFeeds/bootstrap.ps1'
+              arguments: '-Bootstrap -Verbose'
+              pwsh: true
+
+          - powershell: |
+              # dot source script
+              . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-InteractiveNewsLetter.ps1')
+
+              # authenticate with gh api
+              Write-Verbose -Message "Logging in to GitHub with token" -Verbose
+              '$(GitHubApiToken)' | gh auth login --with-token
+
+              # retrieve the feed list 
+              $repositoryList = (Import-PowerShellDataFile -Path (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'res' 'data' 'pr.feeds.psd1')).feeds
+
+              if (-not $repositoryList) {
+                Write-Error -Message "No repositories found"
+                exit 1
+              }
+
+              # the newsletter file
+              $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
+
+              if (-not (Test-Path -Path $newsLetterFile)) {
+                Write-Error -Message "The newsletter file $newsLetterFile does not exist."
+                exit 1
+              }
+
+              # generate newsletter
+              $functionInput = @{
+                RepositoryList = $repositoryList
+                NewsLetterFile = $newsLetterFile
+              }
+              Write-Verbose -Message "Generating newsletter with" -Verbose
+              Write-Verbose -Message ($functionInput | ConvertTo-Json | Out-String) -Verbose
+              $newsLetter = New-InteractiveNewsLetter @functionInput -Verbose
+
+              # connect to REST API
+              Connect-MailChimpApi -ApiKey '$(MailChimpApiToken)'
+
+              # time to build the campaign
+              $start = (Get-Date).AddDays(-7).ToString("dddd MMMM dd yyyy")
+              $end = (Get-Date).ToString("dddd MMMM dd yyyy")
+
+              $parameters = @{
+                  subjectLine = ("DevOpsFeeds PR Newsletter Weekly Update: {0} to {1}" -f $start, $end)
+                  title       = ('DevOpsFeeds PR Newsletter {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
+                  replyTo     = '$(replyTo)'
+                  listId      = '$(listId)'
+                  FromName    = 'DevOpsFeeds'
+                  Opens       = $true
+                  HtmlClicks  = $true
+              }
+              $campaign = New-MailChimpCampaign @parameters -Verbose
+
+              # update the content 
+              $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
+
+              # # the campaign is ready to be sent
+              # Send-MailChimpCampaign -Id $campaign.id -Verbose
+            displayName: 'Send DevOpsFeeds PR newsletter'
