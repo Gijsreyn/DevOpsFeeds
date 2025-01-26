@@ -1,42 +1,42 @@
-name: '$(Build.DefinitionName)-$(Build.DefinitionVersion)-$(Date:yyyyMMdd)-$(Rev:r)'
+name: "$(Build.DefinitionName)-$(Build.DefinitionVersion)-$(Date:yyyyMMdd)-$(Rev:r)"
 
 trigger: none
 
 schedules:
-- cron: "0 4 * * 0" # At 06:00 on every Sunday (UTC+2)
-  displayName: EverySundayAtSix
-  branches:
-    include:
-    - main
-  always: true
+  - cron: "0 4 * * 0" # At 06:00 on every Sunday (UTC+2)
+    displayName: EverySundayAtSix
+    branches:
+      include:
+        - main
+    always: true
 
 parameters:
   - name: newsLetterFile
     type: string
-    default: 'interactive-redesigned.html'
+    default: "interactive-redesigned.html"
 
 resources:
   repositories:
-  - repository: templates
-    type: git
-    name: templates
+    - repository: templates
+      type: git
+      name: templates
 
 stages:
   - stage: Publish
     jobs:
       - job: Publish
-        displayName: 'Publish PR newsletter'
+        displayName: "Publish PR newsletter"
         pool:
-          vmImage: 'ubuntu-latest'
+          vmImage: "ubuntu-latest"
         steps:
           - checkout: self
           - checkout: templates
 
           - task: PowerShell@2
-            displayName: 'Install software'
+            displayName: "Install software"
             inputs:
-              filePath: '$(Build.SourcesDirectory)/DevOpsFeeds/bootstrap.ps1'
-              arguments: '-Bootstrap -Verbose'
+              filePath: "$(Build.SourcesDirectory)/DevOpsFeeds/bootstrap.ps1"
+              arguments: "-Bootstrap -Verbose"
               pwsh: true
 
           - powershell: |
@@ -87,6 +87,7 @@ stages:
                   FromName    = 'DevOpsFeeds'
                   Opens       = $true
                   HtmlClicks  = $true
+                  AutoTweet   = $true
               }
               $campaign = New-MailChimpCampaign @parameters -Verbose
 
@@ -95,4 +96,4 @@ stages:
 
               # the campaign is ready to be sent
               Send-MailChimpCampaign -Id $campaign.id -Verbose
-            displayName: 'Send DevOpsFeeds PR newsletter'
+            displayName: "Send DevOpsFeeds PR newsletter"
