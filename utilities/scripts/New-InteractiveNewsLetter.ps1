@@ -42,6 +42,10 @@ function New-InteractiveNewsLetter {
 
     $pullRequestData = Get-GHCliPullRequestData -RepositoryList $RepositoryList
 
+    $newsLetter = $newsLetter -replace '_{totalPullRequests}_', $pullRequestData.Count
+
+    $newsLetter = $newsLetter -replace '_{totalCategories}_', $RepositoryList.category.Count
+
     # Get category header
     $categoryCounter = Get-CategoryCounter -InputObject $pullRequestData
     $newsLetter = $NewsLetter -replace '{table__countersummary}', $categoryCounter
@@ -51,10 +55,28 @@ function New-InteractiveNewsLetter {
     $newsLetter = $NewsLetter -replace '{table__body}', $bodyTable
 
     # Replace the date
-    $currentDate = (Get-Date).ToString('MMMM dd, yyyy')
-    $newsLetter = $NewsLetter -replace '{currentDate}', $currentDate
+    $getCurrentWeekNumber = Get-ISO8601Week
+    $newsLetter = $NewsLetter -replace '_{currentDate}_', "Week $getCurrentWeekNumber"
 
     return $newsLetter
+}
+
+function Get-ISO8601Week {
+    Param(
+    [datetime]$DT = (Get-Date)
+    )
+    <#
+    First create an integer(0/1) from the boolean,
+    "Is the integer DayOfWeek value greater than zero?".
+    Then Multiply it with 4 or 6 (weekrule = 0 or 2) minus the integer DayOfWeek value.
+    This turns every day (except Sunday) into Thursday.
+    Then return the ISO8601 WeekNumber.
+    #>
+    $Cult = Get-Culture; $DT = Get-Date($DT)
+    $WeekRule = $Cult.DateTimeFormat.CalendarWeekRule.value__
+    $FirstDayOfWeek = $Cult.DateTimeFormat.FirstDayOfWeek.value__
+    $WeekRuleDay = [int]($DT.DayOfWeek.Value__ -ge $FirstDayOfWeek ) * ( (6 - $WeekRule) - $DT.DayOfWeek.Value__ )
+    $Cult.Calendar.GetWeekOfYear(($DT).AddDays($WeekRuleDay), $WeekRule, $FirstDayOfWeek)
 }
 
 function Get-GHCliPullRequestData {
@@ -80,7 +102,7 @@ function Get-GHCliPullRequestData {
                 "--repo",
                 ("{0}/{1}" -f $list.Owner, $list.Repository),
                 "--json",
-                "title,body,url,state,author",
+                "title,body,url,state,author,updatedAt",
                 "--search",
                 $searchQuery,
                 "--state",
@@ -100,15 +122,28 @@ function Get-GHCliPullRequestData {
                     # # Extra rule
                     # $description = $description -replace '<!--', ''
                     if (-not ($_.author.is_bot)) {
+                        # Get the date difference in days
+                        $currentDate = Get-Date
+                        $daysDifference = ($_.updatedAt - $currentDate).Days
+
+                        if ($daysDifference -lt 0) {
+                            $updatedAt =  "$([Math]::Abs($daysDifference)) days ago"
+
+                            if ($updatedAt -eq '7 days ago') {
+                                $updatedAt = '1 week ago'
+                            }
+                        } 
+
                         $inputObject.Add([PSCustomObject]@{
-                            Owner       = $list.Owner
-                            Repository  = $list.Repository
-                            Title       = $_.title
-                            Author     = $_.author.login
-                            State       = $_.state
-                            HtmlUrl     = $_.url
-                            Category    = $list.Category
-                        })
+                                Owner      = $list.Owner
+                                Repository = $list.Repository
+                                Title      = $_.title
+                                Author     = $_.author.login
+                                State      = $_.state
+                                HtmlUrl    = $_.url
+                                UpdatedAt  = $updatedAt
+                                Category   = $list.Category
+                            })
                     }
                 }
             }
@@ -139,11 +174,9 @@ function Get-CategoryCounter {
             Write-Verbose -Message "Processing group: $($group.Name)"
             $theadId = ($group.Name -replace " ", "-").ToLower()
             $contentCounter += @"
-            <tr>
-                <td style="text-align: left; background-color: white;">
-                    <a href="#$theadId">$($group.Name)</a>
-                </td>
-                <td style="text-align: right; background-color: white;">$($group.Count)</td>
+            <tr style="background-color: #fff9f5;">
+                <td style="padding: 12px 15px; border-bottom: 1px solid #ffe0d0;"><a href="#$($theadId)">$($group.Name)</a></td>
+                <td style="padding: 12px 15px; border-bottom: 1px solid #ffe0d0;">$($group.Count)</td>
             </tr>
 "@        
         }
@@ -175,39 +208,39 @@ function Get-BodyTable {
             Write-Verbose -Message "Processing group: $($group.Name)"
             $theadId = ($group.Name -replace " ", "-").ToLower()
             $content += @"
+            <table class="data-table">
             <thead id="$theadId">
             <tr>
-                <th colspan="5" class="config-header">
-                    $($group.Name.ToUpper()) ($($group.Count) UPDATES)
-                </th>
+                <td colspan="5"
+                    style="color: #ff7043; font-weight: bold; padding: 10px; text-align: center; font-size: 20px;pointer-events: none">
+                    $($group.Name) ($($group.Count) new pull requests)</td>
             </tr>
             <tr>
-                <th>Title</th>
-                <th>URL</th>                
-                <th>Repository</th>
-                <th>Author</th>
                 <th>Status</th>
+                <th>Repository</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Last Updated</th>
             </tr>
 "@
 
             foreach ($item in $group.Group) {
                 $content += @"
-                <tbody>
                 <tr>
-                    <td>$($item.Title)</td>
-                    <td><a href="$($item.HtmlUrl)" target="_blank">$($item.HtmlUrl)</a></td>
+                    <td><span class="status-badge status-$($item.State.ToLower())">$(( Get-Culture ).TextInfo.ToTitleCase( $item.State.ToLower()) )</span></td>
                     <td>$($item.Owner)/$($item.Repository)</td>
+                    <td><a href="$($item.HtmlUrl)" target="_blank">$($item.Title)</a></td>
                     <td>$($item.Author)</td>
-                    <td>
-                        <p class="status $($item.State.ToLower())">$(( Get-Culture ).TextInfo.ToTitleCase( $item.State.ToLower()) )</p>
-                    </td>
+                    <td>$($item.UpdatedAt)</td>
                 </tr>
-"@            
-            }
-            
-            $content += @"
-            </thead>
 "@
+            }
+
+            $content += @"
+                </thead>
+                </table>
+"@
+            
         }
     }
 
