@@ -13,7 +13,7 @@ schedules:
 parameters:
   - name: newsLetterFile
     type: string
-    default: "interactive-redesigned.html"
+    default: "interactive-pr-newsletter.html"
 
 resources:
   repositories:
