@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Mandatory = $false)]
-    [string[]] $ModuleName = @('MailChimp'),
+    [string[]] $ModuleName = @('MailChimp', 'PSAI', 'GitHub'),
     [Parameter()]
     [switch] $Bootstrap
 )
@@ -27,4 +27,4 @@ if ($Bootstrap.IsPresent)
             Install-PSResource @installParams
         }
     }
-}  
+}
