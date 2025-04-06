@@ -183,13 +183,17 @@ function Get-GitHubReleaseObject {
     foreach ($gitHubRelease in $GitHubReleaseObject.GetEnumerator()) {
         Write-Verbose "Getting GitHub release object with:"
         Write-Verbose ($gitHubRelease | ConvertTo-Json | Out-String)
-        $releases = Get-GitHubRelease @gitHubRelease
+        try {
+            $releases = Get-GitHubRelease @gitHubRelease -ErrorAction Stop
+        }
+        catch {
+            Write-Warning -Message "Failed to get releases for $($gitHubRelease.Repository): $_"
+        }
 
         $latestRelease = $releases | Where-Object { $_.published_at -gt $currentDate }
 
         if ($latestRelease.Count -eq 0) {
             Write-Verbose "No releases found in $($gitHubRelease.Repository) repo. Skipping."
-            continue
         }
 
         foreach ($release in $latestRelease) {

@@ -57,7 +57,7 @@ stages:
               $githubReleaseProject += @{Repository = "minikube"; Owner = "kubernetes"}
 
               # CI/CD Tools
-              $githubReleaseProject += @{Repository = "runners"; Owner = "actions"}
+              $githubReleaseProject += @{Repository = "runner"; Owner = "actions"}
               $githubReleaseProject += @{Repository = "gitlab"; Owner = "gitlabhq"}
               $githubReleaseProject += @{Repository = "concourse"; Owner = "concourse"}
               $githubReleaseProject += @{Repository = "tekton-pipeline"; Owner = "tektoncd"}
@@ -189,6 +189,6 @@ stages:
               $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
 
               # Generate the newsletter HTML 
-              New-GitHubReleaseLetter -GitHubReleaseObject $githubReleaseProject -GitHubReleaseLetterPath $newsLetterFile -Verbose -ErrorAction SilentlyContinue
+              New-GitHubReleaseLetter -GitHubReleaseObject $githubReleaseProject -GitHubReleaseLetterPath $newsLetterFile -Verbose
             
             displayName: "Generate GitHub release newsletter"
