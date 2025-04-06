@@ -30,6 +30,11 @@ Function Get-MailChimpApiData
                     type = "regular"
                     recipients = [ordered]@{
                         list_id = "listId"
+                        segment_opts = @{
+                            saved_segment_id = 0
+                            match = "any"
+                            conditions = @()
+                        }
                     }
                     settings = [ordered]@{
                         subject_line = "subjectLine"
@@ -578,6 +583,9 @@ function New-MailChimpCampaign
     .PARAMETER ListId
         The ID of the list to send the campaign to.
 
+    .PARAMETER SavedSegmentId
+        The ID of the saved segment to use.
+
     .PARAMETER SubjectLine
         The subject line for the campaign.
 
@@ -669,6 +677,9 @@ function New-MailChimpCampaign
 
         [Parameter(Mandatory = $false)]
         [string] $ListId = "",
+
+        [Parameter(Mandatory = $false)]
+        [int] $SavedSegmentId = 0,
 
         [Parameter(Mandatory = $false)]
         [string] $SubjectLine = "",
@@ -774,6 +785,11 @@ function New-MailChimpCampaign
             type = $Type
             recipients = [ordered]@{
                 list_id = $ListId
+                segment_opts = [ordered]@{
+                    saved_segment_id = $SavedSegmentId
+                    match = "any"
+                    conditions = @()
+                }
             }
             settings = [ordered]@{
                 subject_line = $SubjectLine

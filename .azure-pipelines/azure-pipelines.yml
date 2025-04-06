@@ -80,14 +80,15 @@ stages:
               $end = (Get-Date).ToString("dddd MMMM dd yyyy")
 
               $parameters = @{
-                  subjectLine = ("DevOpsFeeds PR Newsletter Weekly Update: {0} to {1}" -f $start, $end)
-                  title       = ('DevOpsFeeds PR Newsletter {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
-                  replyTo     = '$(replyTo)'
-                  listId      = '$(listId)'
-                  FromName    = 'DevOpsFeeds'
-                  Opens       = $true
-                  HtmlClicks  = $true
-                  AutoTweet   = $true
+                  subjectLine    = ("DevOpsFeeds PR Newsletter Weekly Update: {0} to {1}" -f $start, $end)
+                  title          = ('DevOpsFeeds PR Newsletter {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
+                  replyTo        = '$(replyTo)'
+                  listId         = '$(listId)'
+                  savedSegmentId = '$(savedSegmentId)'
+                  FromName       = 'DevOpsFeeds'
+                  Opens          = $true
+                  HtmlClicks     = $true
+                  AutoTweet      = $true
               }
               $campaign = New-MailChimpCampaign @parameters -Verbose
 

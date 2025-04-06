@@ -1,6 +1,6 @@
 @{
     RootModule           = 'MailChimp.psm1'
-    ModuleVersion        = '0.1.3'
+    ModuleVersion        = '0.1.4'
     GUID                 = '8250d1e0-52d4-4ff4-b58a-f681e7ecf054'
     Author               = 'Gijs Reijn'
     Description          = 'MailChimp module for PowerShell to create campaigns and update content'
