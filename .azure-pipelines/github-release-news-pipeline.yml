@@ -60,7 +60,7 @@ stages:
               $githubReleaseProject += @{Repository = "runner"; Owner = "actions"}
               $githubReleaseProject += @{Repository = "gitlab"; Owner = "gitlabhq"}
               $githubReleaseProject += @{Repository = "concourse"; Owner = "concourse"}
-              $githubReleaseProject += @{Repository = "tekton-pipeline"; Owner = "tektoncd"}
+              $githubReleaseProject += @{Repository = "pipeline"; Owner = "tektoncd"}
               $githubReleaseProject += @{Repository = "argo-cd"; Owner = "argoproj"}
               $githubReleaseProject += @{Repository = "argo-workflows"; Owner = "argoproj"}
               $githubReleaseProject += @{Repository = "spinnaker"; Owner = "spinnaker"}
@@ -190,5 +190,22 @@ stages:
 
               # Generate the newsletter HTML 
               New-GitHubReleaseLetter -GitHubReleaseObject $githubReleaseProject -GitHubReleaseLetterPath $newsLetterFile -Verbose
-            
+
+              # connect to REST API
+              Connect-MailChimpApi -ApiKey '$(MailChimpApiToken)'
+
+              $parameters = @{
+                  subjectLine = ("DevOpsFeeds GitHub Releases Weekly Update - Week (Get-ISO8601Week)")
+                  title       = ('DevOpsFeeds GitHub Releases {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
+                  replyTo     = '$(replyTo)'
+                  listId      = '$(listId)'
+                  FromName    = 'DevOpsFeeds'
+                  Opens       = $true
+                  HtmlClicks  = $true
+                  AutoTweet   = $true
+              }
+              $campaign = New-MailChimpCampaign @parameters -Verbose
+
+              # update the content 
+              $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
             displayName: "Generate GitHub release newsletter"
