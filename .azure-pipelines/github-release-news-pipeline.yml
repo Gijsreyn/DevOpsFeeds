@@ -197,15 +197,15 @@ stages:
               $WeekNumber = Get-ISO8601Week
 
               $parameters = @{
-                  subjectLine = ("DevOps Feeds GitHub Releases Weekly Update - Week {0}" -f $WeekNumber)
-                  title       = ('DevOps Feeds GitHub Releases {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
-                  replyTo     = '$(replyTo)'
-                  listId      = '$(listId)'
+                  subjectLine    = ("DevOps Feeds GitHub Releases Weekly Update - Week {0}" -f $WeekNumber)
+                  title          = ('DevOps Feeds GitHub Releases {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
+                  replyTo        = '$(replyTo)'
+                  listId         = '$(listId)'
                   savedSegmentId = '$(savedSegmentId)'
-                  FromName    = 'DevOpsFeeds'
-                  Opens       = $true
-                  HtmlClicks  = $true
-                  AutoTweet   = $true
+                  FromName       = 'DevOpsFeeds'
+                  Opens          = $true
+                  HtmlClicks     = $true
+                  AutoTweet      = $true
               }
               $campaign = New-MailChimpCampaign @parameters -Verbose
 
