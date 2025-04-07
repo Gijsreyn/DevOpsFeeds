@@ -201,6 +201,7 @@ stages:
                   title       = ('DevOpsFeeds GitHub Releases {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
                   replyTo     = '$(replyTo)'
                   listId      = '$(listId)'
+                  savedSegmentId = '$(savedSegmentId)'
                   FromName    = 'DevOpsFeeds'
                   Opens       = $true
                   HtmlClicks  = $true
@@ -210,4 +211,7 @@ stages:
 
               # update the content 
               $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
+
+              # the campaign is ready to be sent
+              # Send-MailChimpCampaign -Id $campaign.id -Verbose
             displayName: "Generate GitHub release newsletter"

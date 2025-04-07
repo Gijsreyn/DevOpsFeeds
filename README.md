@@ -1,16 +1,17 @@
-# ![FeedLogo] DevOpsFeeds
+# ![FeedLogo] DevOps Feeds
 
-The DevOpsFeed repository is inspired by the Azure Weekly newsletter. The newsletter on Azure content is developed by Luke Murray, a Microsoft MVP. If you've subscribed to Azure Weekly newsletter, you will likely recognize the design slightly for the newsletters that fly around:
+The DevOps Feeds repository is inspired by newsletters created by other community members in the IT. Each newsletter always have their own purpose and goal to deliver content. The purpose of this project is quite clear: to make newsletters that are recognizable, engaging and a focus on DevOps areas.
 
 <p align="center">
   <img src=".images/image-newsletter.png" alt="Newsletter">
 </p>
 
-The purpose of this project is quite clear: to make newsletters that are recognizable and engaging. While the project started as a hobby for me to learn some HTML and CSS, I wanted to get a clear overview of what happened over the week across various open-source projects, whether they were just created, merged, or closed. It kept me informed, and so can you. The next section lists out the available newsletters were you can subscribe. It's free and you can always unsubscribe easily.
+While the project started as a hobby for me to learn some HTML and CSS, I wanted to get a clear overview of what happened over the week across various open-source projects. I think many developers track issues, watch for releases, or review pull request on GitHub. GitHub provides a lot of data and I wanted to grab this data to keep me informed. And so can you. In the next section, you find the available newsletter were you can subscribe. It's free and you can always easily unsubscribe.
 
-The following newsletters are configured and run every Sunday at 06:00:
+The following newsletter are configured through Azure Pipelines. In the ![.azure-pipelines](.azure-pipelines) folder, you can find the scheduled times.
 
 - [Pull Request Newsletter](http://eepurl.com/i1hSUw)
+- [GitHub Releases Newsletter](https://mailchi.mp/cb1284ffa82a/devops-feeds)
 
 The information collected in the newsletters, are through open-source GitHub projects based on category. Each category is divided into sub-sections to easily skim for content relevant to you.
 
@@ -19,7 +20,7 @@ The information collected in the newsletters, are through open-source GitHub pro
 - Easy to setup campaign content
 - Support dynamic feed data
 - Integration with MailChimp templates and sections
-- Azure DevOps pipeline to send email
+- Uses Azure Pipelines to deliver mail
 
 ## Installation
 
@@ -44,7 +45,7 @@ Update-MailChimpCampaign -Id "your-campaign-id" -Html "<h1>Sample HTML</h1>"
 
 ## Pipeline setup
 
-Each Sunday at 6 o'clock, a scheduled trigger runs a pipeline. The steps the pipeline performs:
+Each pipeline is configured on a scheduled trigger. The steps are mostly unique, but can differ in the feeding of data:
 
 1. Bootstrap the environment on ubuntu-latest agent
 2. Collect data using GitHub's CLI
