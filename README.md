@@ -2,9 +2,10 @@
 
 The DevOps Feeds repository is inspired by newsletters created by other community members in the IT. Each newsletter always have their own purpose and goal to deliver content. The purpose of this project is quite clear: to make newsletters that are recognizable, engaging and a focus on DevOps areas.
 
-<p align="center">
-  <img src=".images/image-newsletter.png" alt="Newsletter">
-</p>
+<div align="center">
+  <img src=".images/image-newsletter.png" alt="Newsletter" style="display: inline-block; margin-right: 10px;">
+  <img src=".images/image-github-newsletter.png" alt="GitHub-Newsletter" style="display: inline-block;">
+</div>
 
 While the project started as a hobby for me to learn some HTML and CSS, I wanted to get a clear overview of what happened over the week across various open-source projects. I think many developers track issues, watch for releases, or review pull request on GitHub. GitHub provides a lot of data and I wanted to grab this data to keep me informed. And so can you. In the next section, you find the available newsletter were you can subscribe. It's free and you can always easily unsubscribe.
 
