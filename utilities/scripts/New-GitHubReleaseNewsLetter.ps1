@@ -132,9 +132,9 @@ function Get-NotableFeature {
             )
             try {
                 $completion = Invoke-OAIChatCompletion -Model $ModelName -Messages $messages -MaxTokens 100 -Verbose
-            $content = $completion.choices[0].message.content
+                $content = $completion.choices[0].message.content
 
-            $htmlContent += @"
+                $htmlContent += @"
 <tr>
     <td style="padding: 0 0 15px;">
         <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#1a1a1a" style="border: 1px solid #ffd54e; border-radius: 8px; overflow: hidden;">
