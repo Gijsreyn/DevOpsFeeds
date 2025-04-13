@@ -213,5 +213,5 @@ stages:
               $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
 
               # the campaign is ready to be sent
-              # Send-MailChimpCampaign -Id $campaign.id -Verbose
+              Send-MailChimpCampaign -Id $campaign.id -Verbose
             displayName: "Generate GitHub release newsletter"
