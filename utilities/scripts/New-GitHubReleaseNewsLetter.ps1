@@ -19,7 +19,7 @@ function New-GitHubReleaseLetter {
     )
 
     # Get the latest release object
-    $inputObject = Get-GitHubReleaseObject -GitHubReleaseObject $GitHubReleaseObject
+    $inputObject = Get-GitHubReleaseObject -GitHubReleaseObject $GitHubReleaseObject -ErrorAction SilentlyContinue
 
     $featuredRelease = $inputObject | Get-Random -Count 1
 
