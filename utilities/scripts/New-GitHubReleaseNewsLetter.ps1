@@ -36,7 +36,7 @@ function New-GitHubReleaseLetter {
         }
     )
 
-    $completion = Invoke-OAIChatCompletion -Model $ModelName -Messages $messages -MaxTokens $MaxTokens
+    $completion = Invoke-OAIChatCompletion -Model $ModelName -Messages $messages -MaxTokens $MaxTokens -ErrorAction SilentlyContinue
 
     $body = $completion.choices[0].message.content
 
@@ -131,7 +131,7 @@ function Get-NotableFeature {
                 }
             )
             try {
-                $completion = Invoke-OAIChatCompletion -Model $ModelName -Messages $messages -MaxTokens 100 -Verbose
+                $completion = Invoke-OAIChatCompletion -Model $ModelName -Messages $messages -MaxTokens 100 -ErrorAction Stop
                 $content = $completion.choices[0].message.content
 
                 $htmlContent += @"
