@@ -38,186 +38,189 @@ stages:
               filePath: "$(Build.SourcesDirectory)/DevOpsFeeds/bootstrap.ps1"
               arguments: "-Bootstrap -Verbose"
               pwsh: true
-
-          - powershell: |
-              # dot source script
-              # . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-GitHubReleaseNewsLetter.ps1')
-
-              # The GitHub sources to fetch from
-              $githubReleaseProject = @()
-
-              # Container Orchestration
-              $githubReleaseProject += @{Repository = "kubernetes"; Owner = "kubernetes"}
-              $githubReleaseProject += @{Repository = "helm"; Owner = "helm"}
-              $githubReleaseProject += @{Repository = "k3s"; Owner = "k3s-io"}
-              $githubReleaseProject += @{Repository = "k9s"; Owner = "derailed"}
-              $githubReleaseProject += @{Repository = "kind"; Owner = "kubernetes-sigs"}
-              $githubReleaseProject += @{Repository = "kops"; Owner = "kubernetes"}
-              $githubReleaseProject += @{Repository = "kubespray"; Owner = "kubernetes-sigs"}
-              $githubReleaseProject += @{Repository = "minikube"; Owner = "kubernetes"}
-
-              # CI/CD Tools
-              $githubReleaseProject += @{Repository = "runner"; Owner = "actions"}
-              $githubReleaseProject += @{Repository = "gitlab"; Owner = "gitlabhq"}
-              $githubReleaseProject += @{Repository = "concourse"; Owner = "concourse"}
-              $githubReleaseProject += @{Repository = "pipeline"; Owner = "tektoncd"}
-              $githubReleaseProject += @{Repository = "argo-cd"; Owner = "argoproj"}
-              $githubReleaseProject += @{Repository = "argo-workflows"; Owner = "argoproj"}
-              $githubReleaseProject += @{Repository = "spinnaker"; Owner = "spinnaker"}
-              $githubReleaseProject += @{Repository = "drone"; Owner = "harness"}
-              $githubReleaseProject += @{Repository = "flux"; Owner = "fluxcd"}
-
-              # Infrastructure as Code
-              $githubReleaseProject += @{Repository = "terraform"; Owner = "hashicorp"}
-              $githubReleaseProject += @{Repository = "pulumi"; Owner = "pulumi"}
-              $githubReleaseProject += @{Repository = "terragrunt"; Owner = "gruntwork-io"}
-              $githubReleaseProject += @{Repository = "ansible"; Owner = "ansible"}
-              $githubReleaseProject += @{Repository = "chef"; Owner = "chef"}
-              $githubReleaseProject += @{Repository = "puppet"; Owner = "puppetlabs"}
-              $githubReleaseProject += @{Repository = "salt"; Owner = "saltstack"}
-              $githubReleaseProject += @{Repository = "crossplane"; Owner = "crossplane"}
-              $githubReleaseProject += @{Repository = "bicep"; Owner = "Azure"}
-              $githubReleaseProject += @{Repository = "packer"; Owner = "hashicorp"}
-
-              # Container Technologies
-              $githubReleaseProject += @{Repository = "moby"; Owner = "moby"} # Docker
-              $githubReleaseProject += @{Repository = "podman"; Owner = "containers"}
-              $githubReleaseProject += @{Repository = "buildah"; Owner = "containers"}
-              $githubReleaseProject += @{Repository = "skopeo"; Owner = "containers"}
-              $githubReleaseProject += @{Repository = "cri-o"; Owner = "cri-o"}
-              $githubReleaseProject += @{Repository = "containerd"; Owner = "containerd"}
-              $githubReleaseProject += @{Repository = "kaniko"; Owner = "GoogleContainerTools"}
-              $githubReleaseProject += @{Repository = "buildkit"; Owner = "moby"}
-
-              # Monitoring & Observability
-              $githubReleaseProject += @{Repository = "prometheus"; Owner = "prometheus"}
-              $githubReleaseProject += @{Repository = "grafana"; Owner = "grafana"}
-              $githubReleaseProject += @{Repository = "elasticsearch"; Owner = "elastic"}
-              $githubReleaseProject += @{Repository = "kibana"; Owner = "elastic"}
-              $githubReleaseProject += @{Repository = "beats"; Owner = "elastic"}
-              $githubReleaseProject += @{Repository = "jaeger"; Owner = "jaegertracing"}
-              $githubReleaseProject += @{Repository = "opentelemetry-collector"; Owner = "open-telemetry"}
-              $githubReleaseProject += @{Repository = "telegraf"; Owner = "influxdata"}
-              $githubReleaseProject += @{Repository = "fluent-bit"; Owner = "fluent"}
-              $githubReleaseProject += @{Repository = "fluentd"; Owner = "fluent"}
-              $githubReleaseProject += @{Repository = "loki"; Owner = "grafana"}
-              $githubReleaseProject += @{Repository = "cortex"; Owner = "cortexproject"}
-              $githubReleaseProject += @{Repository = "thanos"; Owner = "thanos-io"}
-              $githubReleaseProject += @{Repository = "opentracing-go"; Owner = "opentracing"}
-              $githubReleaseProject += @{Repository = "node_exporter"; Owner = "prometheus"}
-
-              # Security
-              $githubReleaseProject += @{Repository = "vault"; Owner = "hashicorp"}
-              $githubReleaseProject += @{Repository = "trivy"; Owner = "aquasecurity"}
-              $githubReleaseProject += @{Repository = "clair"; Owner = "quay"}
-              $githubReleaseProject += @{Repository = "falco"; Owner = "falcosecurity"}
-              $githubReleaseProject += @{Repository = "kube-bench"; Owner = "aquasecurity"}
-              $githubReleaseProject += @{Repository = "dex"; Owner = "dexidp"}
-              $githubReleaseProject += @{Repository = "kube-hunter"; Owner = "aquasecurity"}
-              $githubReleaseProject += @{Repository = "kyverno"; Owner = "kyverno"}
-              $githubReleaseProject += @{Repository = "cert-manager"; Owner = "jetstack"}
-              $githubReleaseProject += @{Repository = "opa"; Owner = "open-policy-agent"}
-              $githubReleaseProject += @{Repository = "gatekeeper"; Owner = "open-policy-agent"}
-
-              # Service Mesh & Networking
-              $githubReleaseProject += @{Repository = "istio"; Owner = "istio"}
-              $githubReleaseProject += @{Repository = "envoy"; Owner = "envoyproxy"}
-              $githubReleaseProject += @{Repository = "consul"; Owner = "hashicorp"}
-              $githubReleaseProject += @{Repository = "cilium"; Owner = "cilium"}
-              $githubReleaseProject += @{Repository = "calico"; Owner = "projectcalico"}
-              $githubReleaseProject += @{Repository = "traefik"; Owner = "traefik"}
-              $githubReleaseProject += @{Repository = "ingress-nginx"; Owner = "kubernetes"}
-              $githubReleaseProject += @{Repository = "contour"; Owner = "projectcontour"}
-
-              # Configuration Management
-              $githubReleaseProject += @{Repository = "consul-template"; Owner = "hashicorp"}
-              $githubReleaseProject += @{Repository = "confd"; Owner = "kelseyhightower"}
-              $githubReleaseProject += @{Repository = "etcd"; Owner = "etcd-io"}
-              $githubReleaseProject += @{Repository = "zookeeper"; Owner = "apache"}
-              $githubReleaseProject += @{Repository = "consul"; Owner = "hashicorp"}
-
-              # Cloud Native Storage
-              $githubReleaseProject += @{Repository = "rook"; Owner = "rook"}
-              $githubReleaseProject += @{Repository = "longhorn"; Owner = "longhorn"}
-              $githubReleaseProject += @{Repository = "velero"; Owner = "vmware-tanzu"}
-              $githubReleaseProject += @{Repository = "openebs"; Owner = "openebs"}
-              $githubReleaseProject += @{Repository = "ceph"; Owner = "ceph"}
-
-              # Development Tools
-              $githubReleaseProject += @{Repository = "cli"; Owner = "cli"}
-              $githubReleaseProject += @{Repository = "homebrew"; Owner = "Homebrew"}
-              $githubReleaseProject += @{Repository = "git"; Owner = "git"}
-              $githubReleaseProject += @{Repository = "lazygit"; Owner = "jesseduffield"}
-              $githubReleaseProject += @{Repository = "code-server"; Owner = "coder"}
-              $githubReleaseProject += @{Repository = "ci"; Owner = "devcontainers"}
-
-              # Testing & QA
-              $githubReleaseProject += @{Repository = "chaos-mesh"; Owner = "chaos-mesh"}
-              $githubReleaseProject += @{Repository = "litmus"; Owner = "litmuschaos"}
-              $githubReleaseProject += @{Repository = "chaoskube"; Owner = "linki"}
-              $githubReleaseProject += @{Repository = "k6"; Owner = "grafana"}
-              $githubReleaseProject += @{Repository = "vegeta"; Owner = "tsenart"}
-
-              # Serverless
-              $githubReleaseProject += @{Repository = "serverless"; Owner = "serverless"}
-              $githubReleaseProject += @{Repository = "kubeless"; Owner = "kubeless"}
-              $githubReleaseProject += @{Repository = "fission"; Owner = "fission"}
-
-              # PowerShell & Scripting
-              $githubReleaseProject += @{Repository = "PowerShell"; Owner = "PowerShell"}
-              $githubReleaseProject += @{Repository = "azure-powershell"; Owner = "Azure"}
-              $githubReleaseProject += @{Repository = "DSC"; Owner = "PowerShell"}
-              $githubReleaseProject += @{Repository = "aws-tools-for-powershell"; Owner = "aws"}
-              $githubReleaseProject += @{Repository = "oh-my-posh"; Owner = "JanDeDobbeleer"}
-              $githubReleaseProject += @{Repository = "posh-git"; Owner = "dahlbyk"}
-
-              # Login to Azure
-              $secrets = @{
-                  apiURI         = "$(AzureOpenAIEndpoint)"
-                  apiVersion     = "$(AzureOpenAIAPIVersion)"
-                  apiKey         = "$(AzureOpenAIKey)"
-                  deploymentName = "$(AzureOpenAIDeploymentName)"
-              }
-
-              Set-OAIProvider AzureOpenAI
-              Set-AzOAISecrets @secrets
-
-              # Login to GitHub 
-              Connect-GitHubAccount -Token '$(GitHubApiToken)'
-              
-              $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh'
-              $s[0]
-
-              # Newsletter file 
-              $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
-
-              # Generate the newsletter HTML 
-              $newsLetter = New-GitHubReleaseLetter -GitHubReleaseObject $githubReleaseProject -GitHubReleaseLetterPath $newsLetterFile -Verbose
-
-              # connect to REST API
-              Connect-MailChimpApi -ApiKey '$(MailChimpApiToken)'
-
-              $s = Get-GitHubRelease -Owner 'oh-my-posh' -Repository 'oh-my-posh'
-              $s[0]
-
-              $WeekNumber = Get-ISO8601Week
-
-              $parameters = @{
-                  subjectLine    = ("DevOps Feeds GitHub Releases Weekly Update - Week {0}" -f $WeekNumber)
-                  title          = ('DevOps Feeds GitHub Releases {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
-                  replyTo        = '$(replyTo)'
-                  listId         = '$(listId)'
-                  savedSegmentId = '$(savedSegmentId)'
-                  FromName       = 'DevOpsFeeds'
-                  Opens          = $true
-                  HtmlClicks     = $true
-                  AutoTweet      = $true
-              }
-              $campaign = New-MailChimpCampaign @parameters -Verbose
-
-              # update the content 
-              $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
-
-              # the campaign is ready to be sent
-              Send-MailChimpCampaign -Id $campaign.id -Verbose
+            
+          - task: PowerShell@2
             displayName: "Generate GitHub release newsletter"
+            inputs: 
+              pwsh: true
+              script: |
+                # dot source script
+                . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-GitHubReleaseNewsLetter.ps1')
+
+                # The GitHub sources to fetch from
+                $githubReleaseProject = @()
+
+                # Container Orchestration
+                $githubReleaseProject += @{Repository = "kubernetes"; Owner = "kubernetes"}
+                $githubReleaseProject += @{Repository = "helm"; Owner = "helm"}
+                $githubReleaseProject += @{Repository = "k3s"; Owner = "k3s-io"}
+                $githubReleaseProject += @{Repository = "k9s"; Owner = "derailed"}
+                $githubReleaseProject += @{Repository = "kind"; Owner = "kubernetes-sigs"}
+                $githubReleaseProject += @{Repository = "kops"; Owner = "kubernetes"}
+                $githubReleaseProject += @{Repository = "kubespray"; Owner = "kubernetes-sigs"}
+                $githubReleaseProject += @{Repository = "minikube"; Owner = "kubernetes"}
+
+                # CI/CD Tools
+                $githubReleaseProject += @{Repository = "runner"; Owner = "actions"}
+                $githubReleaseProject += @{Repository = "gitlab"; Owner = "gitlabhq"}
+                $githubReleaseProject += @{Repository = "concourse"; Owner = "concourse"}
+                $githubReleaseProject += @{Repository = "pipeline"; Owner = "tektoncd"}
+                $githubReleaseProject += @{Repository = "argo-cd"; Owner = "argoproj"}
+                $githubReleaseProject += @{Repository = "argo-workflows"; Owner = "argoproj"}
+                $githubReleaseProject += @{Repository = "spinnaker"; Owner = "spinnaker"}
+                $githubReleaseProject += @{Repository = "drone"; Owner = "harness"}
+                $githubReleaseProject += @{Repository = "flux"; Owner = "fluxcd"}
+
+                # Infrastructure as Code
+                $githubReleaseProject += @{Repository = "terraform"; Owner = "hashicorp"}
+                $githubReleaseProject += @{Repository = "pulumi"; Owner = "pulumi"}
+                $githubReleaseProject += @{Repository = "terragrunt"; Owner = "gruntwork-io"}
+                $githubReleaseProject += @{Repository = "ansible"; Owner = "ansible"}
+                $githubReleaseProject += @{Repository = "chef"; Owner = "chef"}
+                $githubReleaseProject += @{Repository = "puppet"; Owner = "puppetlabs"}
+                $githubReleaseProject += @{Repository = "salt"; Owner = "saltstack"}
+                $githubReleaseProject += @{Repository = "crossplane"; Owner = "crossplane"}
+                $githubReleaseProject += @{Repository = "bicep"; Owner = "Azure"}
+                $githubReleaseProject += @{Repository = "packer"; Owner = "hashicorp"}
+
+                # Container Technologies
+                $githubReleaseProject += @{Repository = "moby"; Owner = "moby"} # Docker
+                $githubReleaseProject += @{Repository = "podman"; Owner = "containers"}
+                $githubReleaseProject += @{Repository = "buildah"; Owner = "containers"}
+                $githubReleaseProject += @{Repository = "skopeo"; Owner = "containers"}
+                $githubReleaseProject += @{Repository = "cri-o"; Owner = "cri-o"}
+                $githubReleaseProject += @{Repository = "containerd"; Owner = "containerd"}
+                $githubReleaseProject += @{Repository = "kaniko"; Owner = "GoogleContainerTools"}
+                $githubReleaseProject += @{Repository = "buildkit"; Owner = "moby"}
+
+                # Monitoring & Observability
+                $githubReleaseProject += @{Repository = "prometheus"; Owner = "prometheus"}
+                $githubReleaseProject += @{Repository = "grafana"; Owner = "grafana"}
+                $githubReleaseProject += @{Repository = "elasticsearch"; Owner = "elastic"}
+                $githubReleaseProject += @{Repository = "kibana"; Owner = "elastic"}
+                $githubReleaseProject += @{Repository = "beats"; Owner = "elastic"}
+                $githubReleaseProject += @{Repository = "jaeger"; Owner = "jaegertracing"}
+                $githubReleaseProject += @{Repository = "opentelemetry-collector"; Owner = "open-telemetry"}
+                $githubReleaseProject += @{Repository = "telegraf"; Owner = "influxdata"}
+                $githubReleaseProject += @{Repository = "fluent-bit"; Owner = "fluent"}
+                $githubReleaseProject += @{Repository = "fluentd"; Owner = "fluent"}
+                $githubReleaseProject += @{Repository = "loki"; Owner = "grafana"}
+                $githubReleaseProject += @{Repository = "cortex"; Owner = "cortexproject"}
+                $githubReleaseProject += @{Repository = "thanos"; Owner = "thanos-io"}
+                $githubReleaseProject += @{Repository = "opentracing-go"; Owner = "opentracing"}
+                $githubReleaseProject += @{Repository = "node_exporter"; Owner = "prometheus"}
+
+                # Security
+                $githubReleaseProject += @{Repository = "vault"; Owner = "hashicorp"}
+                $githubReleaseProject += @{Repository = "trivy"; Owner = "aquasecurity"}
+                $githubReleaseProject += @{Repository = "clair"; Owner = "quay"}
+                $githubReleaseProject += @{Repository = "falco"; Owner = "falcosecurity"}
+                $githubReleaseProject += @{Repository = "kube-bench"; Owner = "aquasecurity"}
+                $githubReleaseProject += @{Repository = "dex"; Owner = "dexidp"}
+                $githubReleaseProject += @{Repository = "kube-hunter"; Owner = "aquasecurity"}
+                $githubReleaseProject += @{Repository = "kyverno"; Owner = "kyverno"}
+                $githubReleaseProject += @{Repository = "cert-manager"; Owner = "jetstack"}
+                $githubReleaseProject += @{Repository = "opa"; Owner = "open-policy-agent"}
+                $githubReleaseProject += @{Repository = "gatekeeper"; Owner = "open-policy-agent"}
+
+                # Service Mesh & Networking
+                $githubReleaseProject += @{Repository = "istio"; Owner = "istio"}
+                $githubReleaseProject += @{Repository = "envoy"; Owner = "envoyproxy"}
+                $githubReleaseProject += @{Repository = "consul"; Owner = "hashicorp"}
+                $githubReleaseProject += @{Repository = "cilium"; Owner = "cilium"}
+                $githubReleaseProject += @{Repository = "calico"; Owner = "projectcalico"}
+                $githubReleaseProject += @{Repository = "traefik"; Owner = "traefik"}
+                $githubReleaseProject += @{Repository = "ingress-nginx"; Owner = "kubernetes"}
+                $githubReleaseProject += @{Repository = "contour"; Owner = "projectcontour"}
+
+                # Configuration Management
+                $githubReleaseProject += @{Repository = "consul-template"; Owner = "hashicorp"}
+                $githubReleaseProject += @{Repository = "confd"; Owner = "kelseyhightower"}
+                $githubReleaseProject += @{Repository = "etcd"; Owner = "etcd-io"}
+                $githubReleaseProject += @{Repository = "zookeeper"; Owner = "apache"}
+                $githubReleaseProject += @{Repository = "consul"; Owner = "hashicorp"}
+
+                # Cloud Native Storage
+                $githubReleaseProject += @{Repository = "rook"; Owner = "rook"}
+                $githubReleaseProject += @{Repository = "longhorn"; Owner = "longhorn"}
+                $githubReleaseProject += @{Repository = "velero"; Owner = "vmware-tanzu"}
+                $githubReleaseProject += @{Repository = "openebs"; Owner = "openebs"}
+                $githubReleaseProject += @{Repository = "ceph"; Owner = "ceph"}
+
+                # Development Tools
+                $githubReleaseProject += @{Repository = "cli"; Owner = "cli"}
+                $githubReleaseProject += @{Repository = "homebrew"; Owner = "Homebrew"}
+                $githubReleaseProject += @{Repository = "git"; Owner = "git"}
+                $githubReleaseProject += @{Repository = "lazygit"; Owner = "jesseduffield"}
+                $githubReleaseProject += @{Repository = "code-server"; Owner = "coder"}
+                $githubReleaseProject += @{Repository = "ci"; Owner = "devcontainers"}
+
+                # Testing & QA
+                $githubReleaseProject += @{Repository = "chaos-mesh"; Owner = "chaos-mesh"}
+                $githubReleaseProject += @{Repository = "litmus"; Owner = "litmuschaos"}
+                $githubReleaseProject += @{Repository = "chaoskube"; Owner = "linki"}
+                $githubReleaseProject += @{Repository = "k6"; Owner = "grafana"}
+                $githubReleaseProject += @{Repository = "vegeta"; Owner = "tsenart"}
+
+                # Serverless
+                $githubReleaseProject += @{Repository = "serverless"; Owner = "serverless"}
+                $githubReleaseProject += @{Repository = "kubeless"; Owner = "kubeless"}
+                $githubReleaseProject += @{Repository = "fission"; Owner = "fission"}
+
+                # PowerShell & Scripting
+                $githubReleaseProject += @{Repository = "PowerShell"; Owner = "PowerShell"}
+                $githubReleaseProject += @{Repository = "azure-powershell"; Owner = "Azure"}
+                $githubReleaseProject += @{Repository = "DSC"; Owner = "PowerShell"}
+                $githubReleaseProject += @{Repository = "aws-tools-for-powershell"; Owner = "aws"}
+                $githubReleaseProject += @{Repository = "oh-my-posh"; Owner = "JanDeDobbeleer"}
+                $githubReleaseProject += @{Repository = "posh-git"; Owner = "dahlbyk"}
+
+                # Login to Azure
+                $secrets = @{
+                    apiURI         = "$(AzureOpenAIEndpoint)"
+                    apiVersion     = "$(AzureOpenAIAPIVersion)"
+                    apiKey         = "$(AzureOpenAIKey)"
+                    deploymentName = "$(AzureOpenAIDeploymentName)"
+                }
+
+                Set-OAIProvider AzureOpenAI
+                Set-AzOAISecrets @secrets
+
+                # Login to GitHub 
+                Connect-GitHubAccount -Token '$(GitHubApiToken)'
+                
+                $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh'
+                $s[0]
+
+                # Newsletter file 
+                $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
+
+                # Generate the newsletter HTML 
+                $newsLetter = New-GitHubReleaseLetter -GitHubReleaseObject $githubReleaseProject -GitHubReleaseLetterPath $newsLetterFile -Verbose
+
+                # connect to REST API
+                Connect-MailChimpApi -ApiKey '$(MailChimpApiToken)'
+
+                $s = Get-GitHubRelease -Owner 'oh-my-posh' -Repository 'oh-my-posh'
+                $s[0]
+
+                $WeekNumber = Get-ISO8601Week
+
+                $parameters = @{
+                    subjectLine    = ("DevOps Feeds GitHub Releases Weekly Update - Week {0}" -f $WeekNumber)
+                    title          = ('DevOps Feeds GitHub Releases {0}' -f (Get-Date).ToString('dd/MM/yyyy'))
+                    replyTo        = '$(replyTo)'
+                    listId         = '$(listId)'
+                    savedSegmentId = '$(savedSegmentId)'
+                    FromName       = 'DevOpsFeeds'
+                    Opens          = $true
+                    HtmlClicks     = $true
+                    AutoTweet      = $true
+                }
+                $campaign = New-MailChimpCampaign @parameters -Verbose
+
+                # update the content 
+                $null = Update-MailChimpCampaign -Id $campaign.id -Html $newsLetter -Verbose
+
+                # the campaign is ready to be sent
+                Send-MailChimpCampaign -Id $campaign.id -Verbose
