@@ -192,7 +192,7 @@ stages:
 
                 $installParams = @{
                   Name            = 'GitHub'
-                  RequiredVersion = '0.25.1'
+                  Version         = '0.25.1'
                   Repository      = 'PSGallery'
                   Scope           = 'CurrentUser'
                   Reinstall       = $true
