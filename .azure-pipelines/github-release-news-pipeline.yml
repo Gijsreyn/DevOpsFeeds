@@ -190,7 +190,7 @@ stages:
                 # Login to GitHub 
                 Connect-GitHubAccount -Token '$(GitHubApiToken)'
                 
-                $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh'
+                $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Debug
                 $s[0]
 
                 # Newsletter file 
@@ -202,8 +202,6 @@ stages:
                 # connect to REST API
                 Connect-MailChimpApi -ApiKey '$(MailChimpApiToken)'
 
-                $s = Get-GitHubRelease -Owner 'oh-my-posh' -Repository 'oh-my-posh'
-                $s[0]
 
                 $WeekNumber = Get-ISO8601Week
 
