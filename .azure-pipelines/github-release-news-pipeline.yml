@@ -190,7 +190,7 @@ stages:
                 # Login to GitHub 
                 Connect-GitHubAccount -Token '$(GitHubApiToken)'
                 
-                Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Debug
+                Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Verbose -Debug -Tag v25.22.0
                 $s
 
                 # Newsletter file 
