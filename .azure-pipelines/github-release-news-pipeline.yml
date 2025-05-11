@@ -41,7 +41,7 @@ stages:
 
           - powershell: |
               # dot source script
-              . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-GitHubReleaseNewsLetter.ps1')
+              # . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-GitHubReleaseNewsLetter.ps1')
 
               # The GitHub sources to fetch from
               $githubReleaseProject = @()
