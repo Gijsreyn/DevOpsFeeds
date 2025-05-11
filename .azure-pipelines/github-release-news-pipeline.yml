@@ -189,9 +189,19 @@ stages:
 
                 # Login to GitHub 
                 Connect-GitHubAccount -Token '$(GitHubApiToken)'
+
+                $installParams = @{
+                  Name            = 'GitHub'
+                  RequiredVersion = '0.25.1'
+                  Repository      = 'PSGallery'
+                  Scope           = 'CurrentUser'
+                  Reinstall       = $true
+                  TrustRepository = $true
+                }
+                Install-PSResource @installParams 
                 
-                Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Verbose -Debug -Tag v25.22.0
-                $s
+                $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Debug
+                $s[0]
 
                 # Newsletter file 
                 $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
