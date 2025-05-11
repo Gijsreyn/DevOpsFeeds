@@ -43,6 +43,7 @@ stages:
             displayName: "Generate GitHub release newsletter"
             inputs: 
               pwsh: true
+              targetType: 'inline'
               script: |
                 # dot source script
                 . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-GitHubReleaseNewsLetter.ps1')
