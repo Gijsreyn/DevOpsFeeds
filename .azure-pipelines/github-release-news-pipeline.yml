@@ -187,10 +187,10 @@ stages:
                 Set-OAIProvider AzureOpenAI
                 Set-AzOAISecrets @secrets
 
-                
+                # Workaround to install earlier version
                 $installParams = @{
                   Name            = 'GitHub'
-                  Version         = '0.25.1'
+                  Version         = '0.26.0'
                   Repository      = 'PSGallery'
                   Scope           = 'CurrentUser'
                   Reinstall       = $true
@@ -201,8 +201,6 @@ stages:
                 # Login to GitHub 
                 Connect-GitHubAccount -Token '$(GitHubApiToken)'
                 
-                $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Debug
-                $s[0]
 
                 # Newsletter file 
                 $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
