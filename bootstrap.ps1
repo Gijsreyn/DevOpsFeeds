@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Mandatory = $false)]
-    [string[]] $ModuleName = @('MailChimp', 'PSAI', 'GitHub'),
+    [string[]] $ModuleName = @('MailChimp', 'PSAI'),
     [Parameter()]
     [switch] $Bootstrap
 )
