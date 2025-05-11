@@ -27,7 +27,7 @@ stages:
       - job: Publish
         displayName: "GitHub release newsletter"
         pool:
-          vmImage: "ubuntu-latest"
+          vmImage: "windows-latest"
         steps:
           - checkout: self
           - checkout: templates
