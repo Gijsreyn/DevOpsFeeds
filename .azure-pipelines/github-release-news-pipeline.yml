@@ -191,7 +191,7 @@ stages:
                 Connect-GitHubAccount -Token '$(GitHubApiToken)'
                 
                 $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Debug
-                $s[0]
+                $s
 
                 # Newsletter file 
                 $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
