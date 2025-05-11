@@ -187,9 +187,7 @@ stages:
                 Set-OAIProvider AzureOpenAI
                 Set-AzOAISecrets @secrets
 
-                # Login to GitHub 
-                Connect-GitHubAccount -Token '$(GitHubApiToken)'
-
+                
                 $installParams = @{
                   Name            = 'GitHub'
                   Version         = '0.25.1'
@@ -199,6 +197,9 @@ stages:
                   TrustRepository = $true
                 }
                 Install-PSResource @installParams 
+                
+                # Login to GitHub 
+                Connect-GitHubAccount -Token '$(GitHubApiToken)'
                 
                 $s = Get-GitHubRelease -Owner 'JanDeDobbeleer' -Repository 'oh-my-posh' -Debug
                 $s[0]
