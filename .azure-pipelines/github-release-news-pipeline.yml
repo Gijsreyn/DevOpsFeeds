@@ -194,6 +194,9 @@ stages:
               # connect to REST API
               Connect-MailChimpApi -ApiKey '$(MailChimpApiToken)'
 
+              $s = Get-GitHubRelease -Owner 'oh-my-posh' -Repository 'oh-my-posh'
+              $s[0]
+
               $WeekNumber = Get-ISO8601Week
 
               $parameters = @{
