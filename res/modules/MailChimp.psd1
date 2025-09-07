@@ -22,10 +22,10 @@
             )
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/gijsreijn/devopsfeeds/blob/main/LICENSE'
+            LicenseUri = 'https://github.com/Gijsreyn/devopsfeeds/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/gijsreijn/devopsfeeds/'
+            ProjectUri = 'https://github.com/Gijsreyn/devopsfeeds/'
 
             # A URL to an icon representing this module.
             IconUri = 'https://raw.githubusercontent.com/Gijsreyn/devopsfeeds/main/.images/mailchimp-icon-50px.png'
