@@ -126,6 +126,7 @@ function Get-GHCliPullRequestData {
                         $currentDate = Get-Date
                         $daysDifference = ($_.updatedAt - $currentDate).Days
 
+                        $updatedAt = 'today'
                         if ($daysDifference -lt 0) {
                             $updatedAt =  "$([Math]::Abs($daysDifference)) days ago"
 
@@ -170,15 +171,21 @@ function Get-CategoryCounter {
     process {
         $groups = $InputObject | Group-Object -Property Category
 
+        $groupIndex = 0
         foreach ($group in $groups) {
             Write-Verbose -Message "Processing group: $($group.Name)"
             $theadId = ($group.Name -replace " ", "-").ToLower()
+            $groupIndex++
+            $borderStyle = ($groupIndex -lt $groups.Count) ? 'border-bottom: 1px solid #f1ece5;' : ''
+            $indexNumber = "{0:d2}" -f $groupIndex
+            $prLabel = ($group.Count -eq 1) ? 'PR' : 'PRs'
             $contentCounter += @"
-            <tr style="background-color: #fff9f5;">
-                <td style="padding: 12px 15px; border-bottom: 1px solid #ffe0d0;"><a href="#$($theadId)">$($group.Name)</a></td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid #ffe0d0;">$($group.Count)</td>
+            <tr>
+                <td width="34" valign="middle" style="padding: 13px 0 13px 20px; $borderStyle"><span style="font-family: Consolas, 'Courier New', monospace; font-size: 12px; font-weight: 700; color: #c9c2b8;">$indexNumber</span></td>
+                <td valign="middle" style="padding: 13px 8px 13px 6px; $borderStyle"><a href="#$($theadId)" style="color: #23272f; font-size: 14.5px; font-weight: 600; text-decoration: none;">$($group.Name)</a></td>
+                <td align="right" valign="middle" style="padding: 13px 20px 13px 0; white-space: nowrap; $borderStyle"><a href="#$($theadId)" style="text-decoration: none;"><span style="display: inline-block; min-width: 20px; padding: 3px 11px; border-radius: 999px; background-color: #fff3ed; color: #e04e2c; font-size: 12.5px; font-weight: 700; text-align: center;">$($group.Count) $prLabel</span>&nbsp;<span style="color: #c9c2b8; font-size: 16px; font-weight: 700;">&rsaquo;</span></a></td>
             </tr>
-"@        
+"@
         }
     }
 
@@ -203,44 +210,59 @@ function Get-BodyTable {
     process {
         $groups = $InputObject | Group-Object -Property Category
 
+        # Tinted GitHub-style status pills plus a row accent color; keyed on the lowercase PR state
+        $statusStyles = @{
+            open   = @{ Pill = 'background-color: #e7f6ec; color: #1a7f37;'; Accent = '#2da44e' }
+            merged = @{ Pill = 'background-color: #f3ebff; color: #7c3aed;'; Accent = '#8250df' }
+            closed = @{ Pill = 'background-color: #ffebe9; color: #cf222e;'; Accent = '#cf222e' }
+        }
+        $defaultStatusStyle = @{ Pill = 'background-color: #eceef1; color: #57606a;'; Accent = '#afb8c1' }
+
         $content = @()
         foreach ($group in $groups) {
             Write-Verbose -Message "Processing group: $($group.Name)"
             $theadId = ($group.Name -replace " ", "-").ToLower()
             $content += @"
-            <table class="data-table">
-            <thead id="$theadId">
-            <tr>
-                <td colspan="5"
-                    style="color: #ff7043; font-weight: bold; padding: 10px; text-align: center; font-size: 20px;pointer-events: none">
-                    $($group.Name) ($($group.Count) new pull requests)</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <th>Repository</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Last Updated</th>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; margin: 0 0 22px; background-color: #ffffff; border: 1px solid #e9e3db; border-radius: 14px; overflow: hidden;">
+            <tr id="$theadId">
+                <td style="padding: 15px 20px; background-color: #faf7f3; border-bottom: 1px solid #e9e3db;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td>
+                                <span style="font-size: 16px; font-weight: 700; color: #23272f;">$($group.Name)</span>
+                                <span style="display: inline-block; margin-left: 8px; padding: 3px 11px; border-radius: 999px; background-color: #fff3ed; color: #e04e2c; font-size: 12px; font-weight: 700; vertical-align: middle;">$($group.Count) new</span>
+                            </td>
+                            <td align="right" valign="middle"><a href="#top" style="font-size: 12px; font-weight: 600; color: #b0a99e; text-decoration: none; white-space: nowrap;">Top &uarr;</a></td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
 "@
 
+            $itemIndex = 0
             foreach ($item in $group.Group) {
+                $state = $item.State.ToLower()
+                $statusStyle = $statusStyles.ContainsKey($state) ? $statusStyles[$state] : $defaultStatusStyle
+                $itemIndex++
+                $borderStyle = ($itemIndex -lt $group.Count) ? 'border-bottom: 1px solid #f1ece5;' : ''
                 $content += @"
                 <tr>
-                    <td><span class="status-badge status-$($item.State.ToLower())">$(( Get-Culture ).TextInfo.ToTitleCase( $item.State.ToLower()) )</span></td>
-                    <td>$($item.Owner)/$($item.Repository)</td>
-                    <td><a href="$($item.HtmlUrl)" target="_blank">$($item.Title)</a></td>
-                    <td>$($item.Author)</td>
-                    <td>$($item.UpdatedAt)</td>
+                    <td valign="top" style="padding: 14px 20px 15px 17px; border-left: 3px solid $($statusStyle.Accent); $borderStyle">
+                        <a href="$($item.HtmlUrl)" target="_blank" style="display: block; color: #23272f; font-size: 14.5px; font-weight: 600; line-height: 1.45; text-decoration: none;">$($item.Title)</a>
+                        <div style="margin-top: 7px; font-size: 12px; line-height: 2; color: #8a8f98;">
+                            <span style="display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; vertical-align: middle; $($statusStyle.Pill)"><span style="font-size: 8px; vertical-align: 1px;">&#9679;</span>&nbsp;$(( Get-Culture ).TextInfo.ToTitleCase( $state ))</span>
+                            <span style="display: inline-block; margin-left: 4px; padding: 2px 8px; border-radius: 6px; background-color: #f6f3ee; border: 1px solid #eee8df; font-family: Consolas, 'Courier New', monospace; font-size: 11px; color: #6a7180; vertical-align: middle;">$($item.Owner)/$($item.Repository)</span>
+                            &nbsp;by <span style="color: #57606a; font-weight: 600;">$($item.Author)</span>&nbsp;&nbsp;&bull;&nbsp;&nbsp;$($item.UpdatedAt)
+                        </div>
+                    </td>
                 </tr>
 "@
             }
 
             $content += @"
-                </thead>
                 </table>
 "@
-            
+
         }
     }
 
