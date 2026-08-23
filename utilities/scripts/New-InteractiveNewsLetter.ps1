@@ -224,8 +224,9 @@ function Get-BodyTable {
             $theadId = ($group.Name -replace " ", "-").ToLower()
             $content += @"
             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; margin: 0 0 22px; background-color: #ffffff; border: 1px solid #e9e3db; border-radius: 14px; overflow: hidden;">
-            <tr id="$theadId">
+            <tr>
                 <td style="padding: 15px 20px; background-color: #faf7f3; border-bottom: 1px solid #e9e3db;">
+                    <a id="$theadId" name="$theadId"></a>
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                         <tr>
                             <td>
