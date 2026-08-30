@@ -39,13 +39,20 @@ stages:
               arguments: "-Bootstrap -Verbose"
               pwsh: true
 
+          - task: DownloadSecureFile@1
+            name: githubAppPem
+            displayName: "Download GitHub App private key"
+            inputs:
+              secureFile: "devopsfeeds-github-app.pem"
+
           - powershell: |
               # dot source script
               . (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'New-InteractiveNewsLetter.ps1')
 
-              # authenticate with gh api
-              Write-Verbose -Message "Logging in to GitHub with token" -Verbose
-              '$(GitHubApiToken)' | gh auth login --with-token
+              # authenticate with gh api using a short-lived GitHub App installation token
+              Write-Verbose -Message "Minting GitHub App installation token" -Verbose
+              $env:GH_TOKEN = & (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'utilities' 'scripts' 'Get-GitHubAppToken.ps1') `
+                -ClientId $env:GITHUB_APP_CLIENT_ID -PrivateKeyPath '$(githubAppPem.secureFilePath)' -Verbose
 
               # retrieve the feed list 
               $repositoryList = (Import-PowerShellDataFile -Path (Join-Path '$(Build.SourcesDirectory)' 'DevOpsFeeds' 'res' 'data' 'pr.feeds.psd1')).feeds
@@ -98,3 +105,5 @@ stages:
               # the campaign is ready to be sent
               Send-MailChimpCampaign -Id $campaign.id -Verbose
             displayName: "Send DevOpsFeeds PR newsletter"
+            env:
+              GITHUB_APP_CLIENT_ID: $(GitHubAppClientId)

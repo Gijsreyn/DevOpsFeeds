@@ -38,7 +38,13 @@ stages:
               filePath: "$(Build.SourcesDirectory)/DevOpsFeeds/bootstrap.ps1"
               arguments: "-Bootstrap -Verbose"
               pwsh: true
-            
+
+          - task: DownloadSecureFile@1
+            name: githubAppPem
+            displayName: "Download GitHub App private key"
+            inputs:
+              secureFile: "devopsfeeds-github-app.pem"
+
           - task: PowerShell@2
             displayName: "Generate GitHub release newsletter"
             inputs: 
@@ -198,9 +204,11 @@ stages:
                 }
                 Install-PSResource @installParams 
                 
-                # Login to GitHub 
-                Connect-GitHubAccount -Token '$(GitHubApiToken)'
-                
+                # Login to GitHub as the App and switch to its installation context
+                $privateKey = Get-Content -Path '$(githubAppPem.secureFilePath)' -Raw
+                Connect-GitHubAccount -ClientID $env:GITHUB_APP_CLIENT_ID -PrivateKey $privateKey
+                Connect-GitHubApp -User 'Gijsreyn' -Default
+
 
                 # Newsletter file 
                 $newsLetterFile = Join-Path '$(Build.SourcesDirectory)' 'templates' 'templates' 'html' '${{ parameters.newsLetterFile }}'
@@ -232,3 +240,5 @@ stages:
 
                 # the campaign is ready to be sent
                 Send-MailChimpCampaign -Id $campaign.id -Verbose
+            env:
+              GITHUB_APP_CLIENT_ID: $(GitHubAppClientId)
