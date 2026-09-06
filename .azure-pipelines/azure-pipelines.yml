@@ -43,7 +43,7 @@ stages:
             name: githubAppPem
             displayName: "Download GitHub App private key"
             inputs:
-              secureFile: "devopsfeeds-github-app.pem"
+              secureFile: "devopsfeeds-newsletter.2026-08-30.private-key.pem"
 
           - powershell: |
               # dot source script
